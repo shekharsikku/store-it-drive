@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { OtpModal } from "@/components/otp-modal";
-// import { createAccount, signInUser } from "@/lib/actions/user.actions";
+import { createAccount, signInUser } from "@/lib/actions/user.actions";
 
 type FormType = "sign-in" | "sign-up";
 
@@ -51,15 +51,15 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
 
     try {
       console.log({ values });
-      // const user =
-      //   type === "sign-up"
-      //     ? await createAccount({
-      //       fullName: values.fullName || "",
-      //       email: values.email,
-      //     })
-      //     : await signInUser({ email: values.email });
+      const user =
+        formType === "sign-up"
+          ? await createAccount({
+            fullName: values.fullName || "",
+            email: values.email,
+          })
+          : await signInUser({ email: values.email });
 
-      // setAccountId(user.accountId);
+      setAccountId(user.accountId);
     } catch {
       setErrorMessage("Failed to create account. Please try again.");
     } finally {

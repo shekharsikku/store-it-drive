@@ -9,7 +9,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
 import {
   InputOTP,
   InputOTPGroup,
@@ -18,7 +17,7 @@ import {
 import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-// import { verifySecret, sendEmailOTP } from "@/lib/actions/user.actions";
+import { verifySecret, sendEmailOTP } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 
 const OtpModal = ({
@@ -40,11 +39,9 @@ const OtpModal = ({
     console.log({ accountId, password });
 
     try {
-      // const sessionId = await verifySecret({ accountId, password });
-
-      // console.log({ sessionId });
-
-      // if (sessionId) router.push("/");
+      const sessionId = await verifySecret({ accountId, password });
+      console.log({ sessionId });
+      if (sessionId) router.push("/");
     } catch (error) {
       console.log("Failed to verify OTP", error);
     }
@@ -53,7 +50,7 @@ const OtpModal = ({
   };
 
   const handleResendOtp = async () => {
-    // await sendEmailOTP({ email });
+    await sendEmailOTP({ email });
   };
 
   return (
@@ -90,11 +87,7 @@ const OtpModal = ({
 
         <AlertDialogFooter>
           <div className="flex w-full flex-col gap-4">
-            <AlertDialogAction
-              onClick={handleSubmit}
-              className="shad-submit-btn h-12"
-              type="button"
-            >
+            <AlertDialogAction onClick={handleSubmit} className="shad-submit-btn h-12" type="button">
               Submit
               {isLoading && (
                 <Image
@@ -108,13 +101,8 @@ const OtpModal = ({
             </AlertDialogAction>
 
             <div className="subtitle-2 mt-2 text-center text-light-100">
-              Did n&apos;t get a code?
-              <Button
-                type="button"
-                variant="link"
-                className="pl-1 text-brand"
-                onClick={handleResendOtp}
-              >
+              Didn&apos;t get a code?
+              <Button type="button" variant="link" className="pl-1 text-brand" onClick={handleResendOtp}>
                 Click to resend
               </Button>
             </div>
