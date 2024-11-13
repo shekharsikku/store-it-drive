@@ -83,15 +83,15 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 
   const date = new Date(isoString);
 
-  // Get hours and adjust for 12-hour format
+  /** Get hours and adjust for 12-hour format */
   let hours = date.getHours();
   const minutes = date.getMinutes();
   const period = hours >= 12 ? "pm" : "am";
 
-  // Convert hours to 12-hour format
+  /** Convert hours to 12-hour format */
   hours = hours % 12 || 12;
 
-  // Format the time and date parts
+  /** Format the time and date parts */
   const time = `${hours}:${minutes.toString().padStart(2, "0")}${period}`;
   const day = date.getDate();
   const monthNames = [
@@ -118,7 +118,6 @@ export const getFileIcon = (
   type: FileType | string
 ) => {
   switch (extension) {
-    // Document
     case "pdf":
       return "/assets/icons/file-pdf.svg";
     case "doc":
@@ -134,8 +133,10 @@ export const getFileIcon = (
   }
 };
 
-// APPWRITE URL UTILS
-// Construct appwrite file URL - https://appwrite.io/docs/apis/rest#images
+/**
+ * Appwrite Url Utils
+ * Construct Appwrite File Url - https://appwrite.io/docs/apis/rest#images
+ */
 export const constructFileUrl = (bucketFileId: string) => {
   return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
 };
@@ -144,7 +145,7 @@ export const constructDownloadUrl = (bucketFileId: string) => {
   return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
 };
 
-// DASHBOARD UTILS
+/** Dashboard Utils */
 export const getUsageSummary = (totalSpace: any) => {
   return [
     {

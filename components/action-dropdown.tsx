@@ -46,7 +46,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     setIsDropdownOpen(false);
     setAction(null);
     setName(file.name);
-    //   setEmails([]);
+    // setEmails([]);
   };
 
   const handleAction = async () => {
@@ -145,12 +145,12 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
           <Image
             src="/assets/icons/dots.svg"
             alt="dots"
-            width={34}
-            height={34}
+            width={30}
+            height={30}
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel className="max-w-[200px] truncate">
+          <DropdownMenuLabel className="min-w-[160px] max-w-[200px] truncate">
             {file.name}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

@@ -193,7 +193,7 @@ export const deleteFile = async ({
   }
 };
 
-// ============================== TOTAL FILE SPACE USED
+/** Total file space used */
 export async function getTotalSpaceUsed() {
   try {
     const { databases } = await createSessionClient();

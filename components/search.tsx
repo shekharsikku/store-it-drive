@@ -63,6 +63,7 @@ const Search = () => {
           height={24}
         />
         <Input
+          id="file-search-input"
           value={query}
           placeholder="Search..."
           className="search-input"

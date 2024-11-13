@@ -8,7 +8,7 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Thumbnail } from "@/components/thumbnail";
 import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
-import { MAX_FILE_SIZE } from "@/constants";
+import { MaxFileSize } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { uploadFile } from "@/lib/actions/file.actions";
 import { usePathname } from "next/navigation";
@@ -29,7 +29,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
       setFiles(acceptedFiles);
 
       const uploadPromises = acceptedFiles.map(async (file) => {
-        if (file.size > MAX_FILE_SIZE) {
+        if (file.size > MaxFileSize) {
           setFiles((prevFiles) =>
             prevFiles.filter((f) => f.name !== file.name),
           );

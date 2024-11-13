@@ -60,7 +60,7 @@
 }
 
 @layer utilities {
-  /* ===== TYPOGRAPHY */
+  /* Typography */
   .h1 {
     @apply text-[34px] leading-[42px] font-bold;
   }
@@ -98,7 +98,7 @@
     @apply text-[10px] leading-[14px] font-normal;
   }
 
-  /* ===== HELPER CLASSES */
+  /* Helper Classes */
   .container {
     @apply mx-auto max-w-7xl px-5;
   }
@@ -109,7 +109,7 @@
     @apply flex items-center justify-center;
   }
 
-  /* =====  SHADCN OVERRIDES */
+  /* Sahdcn Overriders */
   .shad-no-focus {
     @apply outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
   }
@@ -167,7 +167,7 @@
     @apply invert-0 opacity-100 !important;
   }
 
-  /* =====  STYLE CLASSES */
+  /* Style Classes */
 
   /* Root Layout */
   .main-content {
@@ -340,10 +340,10 @@
 
   /* Mobile Navigation */
   .mobile-header {
-    @apply flex h-[60px] justify-between px-5 sm:hidden !important;
+    @apply flex h-[60px] justify-between items-center px-6 py-12 sm:hidden !important;
   }
   .header-user {
-    @apply my-3 flex items-center gap-2 rounded-full p-1 text-light-100 sm:justify-center sm:bg-brand/10 lg:justify-start lg:p-3 !important;
+    @apply my-3 flex items-center gap-2 rounded-full px-2 py-4 text-light-100 sm:justify-center sm:bg-brand/10 lg:justify-start lg:p-3 !important;
   }
   .header-user-avatar {
     @apply aspect-square w-10 rounded-full object-cover !important;
