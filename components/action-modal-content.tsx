@@ -54,6 +54,7 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
           Share file with other users
         </p>
         <Input
+          id="share"
           type="email"
           placeholder="Enter email address"
           onChange={(e) => onInputChange(e.target.value.trim().split(","))}

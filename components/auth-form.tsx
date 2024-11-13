@@ -85,6 +85,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
 
                     <FormControl>
                       <Input
+                        id="full-name"
                         placeholder="Enter your full name"
                         className="shad-input"
                         {...field}
@@ -108,6 +109,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
 
                   <FormControl>
                     <Input
+                      id="email"
                       placeholder="Enter your email"
                       className="shad-input"
                       {...field}

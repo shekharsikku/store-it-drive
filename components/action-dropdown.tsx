@@ -95,6 +95,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
           </DialogTitle>
           {value === "rename" && (
             <Input
+              id="rename"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
