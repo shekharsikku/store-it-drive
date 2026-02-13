@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Models } from "node-appwrite";
-import { Thumbnail } from "@/components/thumbnail";
-import { convertFileSize } from "@/lib/utils";
+import type { Models } from "node-appwrite";
 import { ActionDropdown } from "@/components/action-dropdown";
 import { FormattedDateTime } from "@/components/formatted-datetime";
+import { Thumbnail } from "@/components/thumbnail";
+import { convertFileSize } from "@/lib/utils";
 
 const Card = ({ file }: { file: Models.Document }) => {
   return (
@@ -25,13 +25,8 @@ const Card = ({ file }: { file: Models.Document }) => {
 
       <div className="file-card-details">
         <p className="subtitle-2 line-clamp-1">{file.name}</p>
-        <FormattedDateTime
-          date={file.$createdAt}
-          className="body-2 text-light-100"
-        />
-        <p className="caption line-clamp-1 text-light-200">
-          By: {file.owner.fullName}
-        </p>
+        <FormattedDateTime date={file.$createdAt} className="body-2 text-light-100" />
+        <p className="caption line-clamp-1 text-light-200">By: {file.owner.fullName}</p>
       </div>
     </Link>
   );

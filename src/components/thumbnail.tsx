@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import { cn, getFileIcon } from "@/lib/utils";
 
@@ -10,13 +9,7 @@ interface Props {
   className?: string;
 }
 
-const Thumbnail = ({
-  type,
-  extension,
-  url = "",
-  imageClassName,
-  className,
-}: Props) => {
+const Thumbnail = ({ type, extension, url = "", imageClassName, className }: Props) => {
   const isImage = type === "image" && extension !== "svg";
 
   return (
@@ -26,11 +19,7 @@ const Thumbnail = ({
         alt="thumbnail"
         width={100}
         height={100}
-        className={cn(
-          "size-8 object-contain",
-          imageClassName,
-          isImage && "thumbnail-image",
-        )}
+        className={cn("size-8 object-contain", imageClassName, isImage && "thumbnail-image")}
       />
     </figure>
   );

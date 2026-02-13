@@ -1,17 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import { usePathname } from "next/navigation";
+import type React from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Button } from "@/components/ui/button";
 import { Thumbnail } from "@/components/thumbnail";
-import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { MaxFileSize } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { uploadFile } from "@/lib/actions/file.actions";
-import { usePathname } from "next/navigation";
+import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
 
 interface Props {
   ownerId: string;
@@ -30,30 +29,24 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
 
       const uploadPromises = acceptedFiles.map(async (file) => {
         if (file.size > MaxFileSize) {
-          setFiles((prevFiles) =>
-            prevFiles.filter((f) => f.name !== file.name),
-          );
+          setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name));
 
           return toast({
             description: (
               <p className="body-2 text-white">
-                <span className="font-semibold">{file.name}</span> is too large.
-                Max file size is 20MB.
+                <span className="font-semibold">{file.name}</span> is too large. Max file size is 20MB.
               </p>
             ),
             className: "error-toast",
           });
         }
 
-        return uploadFile({ file, ownerId, accountId, path }).then(
-          (uploadedFile: any) => {
-            if (uploadedFile) {
-              setFiles((prevFiles) =>
-                prevFiles.filter((f) => f.name !== file.name),
-              );
-            }
-          },
-        );
+        // biome-ignore lint/suspicious/noExplicitAny: <type of file is not confirmed>
+        return uploadFile({ file, ownerId, accountId, path }).then((uploadedFile: any) => {
+          if (uploadedFile) {
+            setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name));
+          }
+        });
       });
 
       await Promise.all(uploadPromises);
@@ -63,10 +56,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const handleRemoveFile = (
-    e: React.MouseEvent<HTMLImageElement, MouseEvent>,
-    fileName: string,
-  ) => {
+  const handleRemoveFile = (e: React.MouseEvent<HTMLImageElement, MouseEvent>, fileName: string) => {
     e.stopPropagation();
     setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
   };
@@ -75,13 +65,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
     <div {...getRootProps()} className="cursor-pointer">
       <input id="upload" {...getInputProps()} />
       <Button type="button" className={cn("uploader-button", className)}>
-        <Image
-          src="/assets/icons/upload.svg"
-          alt="upload"
-          width={24}
-          height={24}
-        />{" "}
-        <p>Upload</p>
+        <Image src="/assets/icons/upload.svg" alt="upload" width={24} height={24} /> <p>Upload</p>
       </Button>
       {files.length > 0 && (
         <ul className="uploader-preview-list">
@@ -91,25 +75,13 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
             const { type, extension } = getFileType(file.name);
 
             return (
-              <li
-                key={`${file.name}-${index}`}
-                className="uploader-preview-item"
-              >
+              <li key={`${file.name}-${index}`} className="uploader-preview-item">
                 <div className="flex items-center gap-3">
-                  <Thumbnail
-                    type={type}
-                    extension={extension}
-                    url={convertFileToUrl(file)}
-                  />
+                  <Thumbnail type={type} extension={extension} url={convertFileToUrl(file)} />
 
                   <div className="preview-item-name">
                     {file.name}
-                    <Image
-                      src="/assets/icons/file-loader.gif"
-                      width={80}
-                      height={26}
-                      alt="Loader"
-                    />
+                    <Image src="/assets/icons/file-loader.gif" width={80} height={26} alt="Loader" />
                   </div>
                 </div>
 

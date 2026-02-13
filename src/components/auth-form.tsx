@@ -1,22 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { OtpModal } from "@/components/otp-modal";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { createAccount, signInUser } from "@/lib/actions/user.actions";
 
 type FormType = "sign-in" | "sign-up";
@@ -24,10 +17,7 @@ type FormType = "sign-in" | "sign-up";
 const authFormSchema = (formType: FormType) => {
   return z.object({
     email: z.string().email(),
-    fullName:
-      formType === "sign-up"
-        ? z.string().min(2).max(50)
-        : z.string().optional(),
+    fullName: formType === "sign-up" ? z.string().min(2).max(50) : z.string().optional(),
   });
 };
 
@@ -54,9 +44,9 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
       const user =
         formType === "sign-up"
           ? await createAccount({
-            fullName: values.fullName || "",
-            email: values.email,
-          })
+              fullName: values.fullName || "",
+              email: values.email,
+            })
           : await signInUser({ email: values.email });
 
       setAccountId(user.accountId);
@@ -71,9 +61,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form">
-          <h1 className="form-title">
-            {formType === "sign-in" ? "Sign In" : "Sign Up"}
-          </h1>
+          <h1 className="form-title">{formType === "sign-in" ? "Sign In" : "Sign Up"}</h1>
           {formType === "sign-up" && (
             <FormField
               control={form.control}
@@ -84,12 +72,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
                     <FormLabel className="shad-form-label">Full Name</FormLabel>
 
                     <FormControl>
-                      <Input
-                        id="full-name"
-                        placeholder="Enter your full name"
-                        className="shad-input"
-                        {...field}
-                      />
+                      <Input id="full-name" placeholder="Enter your full name" className="shad-input" {...field} />
                     </FormControl>
                   </div>
 
@@ -108,12 +91,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
                   <FormLabel className="shad-form-label">Email</FormLabel>
 
                   <FormControl>
-                    <Input
-                      id="email"
-                      placeholder="Enter your email"
-                      className="shad-input"
-                      {...field}
-                    />
+                    <Input id="email" placeholder="Enter your email" className="shad-input" {...field} />
                   </FormControl>
                 </div>
 
@@ -122,21 +100,11 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
             )}
           />
 
-          <Button
-            type="submit"
-            className="form-submit-button"
-            disabled={isLoading}
-          >
+          <Button type="submit" className="form-submit-button" disabled={isLoading}>
             {formType === "sign-in" ? "Sign In" : "Sign Up"}
 
             {isLoading && (
-              <Image
-                src="/assets/icons/loader.svg"
-                alt="loader"
-                width={24}
-                height={24}
-                className="ml-2 animate-spin"
-              />
+              <Image src="/assets/icons/loader.svg" alt="loader" width={24} height={24} className="ml-2 animate-spin" />
             )}
           </Button>
 
@@ -144,14 +112,9 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
 
           <div className="body-2 flex justify-center">
             <p className="text-light-100">
-              {formType === "sign-in"
-                ? "Don't have an account?"
-                : "Already have an account?"}
+              {formType === "sign-in" ? "Don't have an account?" : "Already have an account?"}
             </p>
-            <Link
-              href={formType === "sign-in" ? "/sign-up" : "/sign-in"}
-              className="ml-1 font-medium text-brand"
-            >
+            <Link href={formType === "sign-in" ? "/sign-up" : "/sign-in"} className="ml-1 font-medium text-brand">
               {" "}
               {formType === "sign-in" ? "Sign Up" : "Sign In"}
             </Link>
@@ -159,9 +122,7 @@ const AuthForm = ({ formType }: { formType: FormType }) => {
         </form>
       </Form>
 
-      {accountId && (
-        <OtpModal email={form.getValues("email")} accountId={accountId} />
-      )}
+      {accountId && <OtpModal email={form.getValues("email")} accountId={accountId} />}
     </>
   );
 };

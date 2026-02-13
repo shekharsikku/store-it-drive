@@ -1,5 +1,9 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,24 +13,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-import React, { useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { verifySecret, sendEmailOTP } from "@/lib/actions/user.actions";
-import { useRouter } from "next/navigation";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { sendEmailOTP, verifySecret } from "@/lib/actions/user.actions";
 
-const OtpModal = ({
-  accountId,
-  email,
-}: {
-  accountId: string;
-  email: string;
-}) => {
+const OtpModal = ({ accountId, email }: { accountId: string; email: string }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
@@ -69,8 +60,7 @@ const OtpModal = ({
             />
           </AlertDialogTitle>
           <AlertDialogDescription className="subtitle-2 text-center text-light-100">
-            We&apos;ve sent a code to{" "}
-            <span className="pl-1 text-brand">{email}</span>
+            We&apos;ve sent a code to <span className="pl-1 text-brand">{email}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
 

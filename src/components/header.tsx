@@ -1,17 +1,10 @@
-import React from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Search } from "@/components/search";
 import { FileUploader } from "@/components/file-uploader";
+import { Search } from "@/components/search";
+import { Button } from "@/components/ui/button";
 import { signOutUser } from "@/lib/actions/user.actions";
 
-const Header = ({
-  userId,
-  accountId,
-}: {
-  userId: string;
-  accountId: string;
-}) => {
+const Header = ({ userId, accountId }: { userId: string; accountId: string }) => {
   return (
     <header className="header">
       <Search />
@@ -25,13 +18,7 @@ const Header = ({
           }}
         >
           <Button type="submit" className="sign-out-button">
-            <Image
-              src="/assets/icons/logout.svg"
-              alt="logo"
-              width={24}
-              height={24}
-              className="w-6"
-            />
+            <Image src="/assets/icons/logout.svg" alt="logo" width={24} height={24} className="w-6" />
           </Button>
         </form>
       </div>

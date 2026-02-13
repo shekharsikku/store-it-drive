@@ -5,19 +5,11 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex min-h-screen lg:max-h-screen">
       <section className="hidden w-1/2 items-center justify-center bg-brand p-10 lg:flex xl:w-2/5">
         <div className="flex max-h-[800px] max-w-[430px] flex-col justify-center space-y-12">
-          <Image
-            src="/assets/icons/logo-full.svg"
-            alt="logo"
-            width={224}
-            height={82}
-            className="h-auto"
-          />
+          <Image src="/assets/icons/logo-full.svg" alt="logo" width={224} height={82} className="h-auto" />
 
           <div className="space-y-5 text-white">
             <h1 className="h1">Manage your files the best way</h1>
-            <p className="body-1">
-              This is a place where you can store all your documents.
-            </p>
+            <p className="body-1">This is a place where you can store all your documents.</p>
           </div>
           <Image
             src="/assets/images/files.png"
@@ -43,7 +35,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         {children}
       </section>
     </div>
-  )
-}
+  );
+};
 
 export default AuthLayout;

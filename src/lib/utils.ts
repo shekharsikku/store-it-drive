@@ -1,29 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const parseStringify = (value: unknown) =>
-  JSON.parse(JSON.stringify(value));
+export const parseStringify = (value: unknown) => JSON.parse(JSON.stringify(value));
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export const convertFileSize = (sizeInBytes: number, digits?: number) => {
   if (sizeInBytes < 1024) {
-    return sizeInBytes + " Bytes"; // Less than 1 KB, show in Bytes
+    return `${sizeInBytes} Bytes`; // Less than 1 KB, show in Bytes
   } else if (sizeInBytes < 1024 * 1024) {
     const sizeInKB = sizeInBytes / 1024;
-    return sizeInKB.toFixed(digits || 1) + " KB"; // Less than 1 MB, show in KB
+    return `${sizeInKB.toFixed(digits || 1)} KB`; // Less than 1 MB, show in KB
   } else if (sizeInBytes < 1024 * 1024 * 1024) {
     const sizeInMB = sizeInBytes / (1024 * 1024);
-    return sizeInMB.toFixed(digits || 1) + " MB"; // Less than 1 GB, show in MB
+    return `${sizeInMB.toFixed(digits || 1)} MB`; // Less than 1 GB, show in MB
   } else {
     const sizeInGB = sizeInBytes / (1024 * 1024 * 1024);
-    return sizeInGB.toFixed(digits || 1) + " GB"; // 1 GB or more, show in GB
+    return `${sizeInGB.toFixed(digits || 1)} GB`; // 1 GB or more, show in GB
   }
 };
 
@@ -69,8 +66,7 @@ export const getFileType = (fileName: string) => {
   const videoExtensions = ["mp4", "avi", "mov", "mkv", "webm"];
   const audioExtensions = ["mp3", "wav", "ogg", "flac"];
 
-  if (documentExtensions.includes(extension))
-    return { type: "document", extension };
+  if (documentExtensions.includes(extension)) return { type: "document", extension };
   if (imageExtensions.includes(extension)) return { type: "image", extension };
   if (videoExtensions.includes(extension)) return { type: "video", extension };
   if (audioExtensions.includes(extension)) return { type: "audio", extension };
@@ -94,29 +90,13 @@ export const formatDateTime = (isoString: string | null | undefined) => {
   /** Format the time and date parts */
   const time = `${hours}:${minutes.toString().padStart(2, "0")}${period}`;
   const day = date.getDate();
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const month = monthNames[date.getMonth()];
 
   return `${time}, ${day} ${month}`;
 };
 
-export const getFileIcon = (
-  extension: string | undefined,
-  type: FileType | string
-) => {
+export const getFileIcon = (extension: string | undefined, _type: FileType | string) => {
   switch (extension) {
     case "pdf":
       return "/assets/icons/file-pdf.svg";
@@ -146,6 +126,7 @@ export const constructDownloadUrl = (bucketFileId: string) => {
 };
 
 /** Dashboard Utils */
+// biome-ignore lint/suspicious/noExplicitAny: <type not confirm for document>
 export const getUsageSummary = (totalSpace: any) => {
   return [
     {

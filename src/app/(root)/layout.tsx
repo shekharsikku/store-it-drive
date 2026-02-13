@@ -1,10 +1,10 @@
-import React from "react";
-import { Sidebar } from "@/components/sidebar";
-import { MobileNavigation } from "@/components/mobile-navigation";
-import { Header } from "@/components/header";
-import { getCurrentUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
+import type React from "react";
+import { Header } from "@/components/header";
+import { MobileNavigation } from "@/components/mobile-navigation";
+import { Sidebar } from "@/components/sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import { getCurrentUser } from "@/lib/actions/user.actions";
 
 export const dynamic = "force-dynamic";
 

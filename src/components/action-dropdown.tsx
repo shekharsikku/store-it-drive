@@ -1,12 +1,13 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { Models } from "node-appwrite";
+import { useState } from "react";
+import { FileDetails, ShareInput } from "@/components/action-modal-content";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,21 +16,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import { Models } from "node-appwrite";
-import { actionsDropdownItems } from "@/constants";
-import { constructDownloadUrl } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  deleteFile,
-  renameFile,
-  updateFileUsers,
-} from "@/lib/actions/file.actions";
-import { usePathname } from "next/navigation";
-import { FileDetails, ShareInput } from "@/components/action-modal-content";
+import { actionsDropdownItems } from "@/constants";
+import { deleteFile, renameFile, updateFileUsers } from "@/lib/actions/file.actions";
+import { constructDownloadUrl } from "@/lib/utils";
 
 const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,11 +45,9 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     let success = false;
 
     const actions = {
-      rename: () =>
-        renameFile({ fileId: file.$id, name, extension: file.extension, path }),
+      rename: () => renameFile({ fileId: file.$id, name, extension: file.extension, path }),
       share: () => updateFileUsers({ fileId: file.$id, emails, path }),
-      delete: () =>
-        deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path }),
+      delete: () => deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path }),
     };
 
     success = await actions[action.value as keyof typeof actions]();
@@ -90,25 +78,12 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     return (
       <DialogContent className="shad-dialog button">
         <DialogHeader className="flex flex-col gap-3">
-          <DialogTitle className="text-center text-light-100">
-            {label}
-          </DialogTitle>
+          <DialogTitle className="text-center text-light-100">{label}</DialogTitle>
           {value === "rename" && (
-            <Input
-              id="rename"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <Input id="rename" type="text" value={name} onChange={(e) => setName(e.target.value)} />
           )}
           {value === "details" && <FileDetails file={file} />}
-          {value === "share" && (
-            <ShareInput
-              file={file}
-              onInputChange={setEmails}
-              onRemove={handleRemoveUser}
-            />
-          )}
+          {value === "share" && <ShareInput file={file} onInputChange={setEmails} onRemove={handleRemoveUser} />}
           {value === "delete" && (
             <p className="delete-confirmation">
               Are you sure you want to delete{` `}
@@ -124,13 +99,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
             <Button onClick={handleAction} className="modal-submit-button">
               <p className="capitalize">{value}</p>
               {isLoading && (
-                <Image
-                  src="/assets/icons/loader.svg"
-                  alt="loader"
-                  width={24}
-                  height={24}
-                  className="animate-spin"
-                />
+                <Image src="/assets/icons/loader.svg" alt="loader" width={24} height={24} className="animate-spin" />
               )}
             </Button>
           </DialogFooter>
@@ -143,17 +112,10 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger className="shad-no-focus">
-          <Image
-            src="/assets/icons/dots.svg"
-            alt="dots"
-            width={30}
-            height={30}
-          />
+          <Image src="/assets/icons/dots.svg" alt="dots" width={30} height={30} />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel className="min-w-[160px] max-w-[200px] truncate">
-            {file.name}
-          </DropdownMenuLabel>
+          <DropdownMenuLabel className="min-w-[160px] max-w-[200px] truncate">{file.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {actionsDropdownItems.map((actionItem) => (
             <DropdownMenuItem
@@ -162,11 +124,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
               onClick={() => {
                 setAction(actionItem);
 
-                if (
-                  ["rename", "share", "delete", "details"].includes(
-                    actionItem.value,
-                  )
-                ) {
+                if (["rename", "share", "delete", "details"].includes(actionItem.value)) {
                   setIsModalOpen(true);
                 }
               }}
@@ -177,22 +135,12 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
                   download={file.name}
                   className="flex items-center gap-2"
                 >
-                  <Image
-                    src={actionItem.icon}
-                    alt={actionItem.label}
-                    width={30}
-                    height={30}
-                  />
+                  <Image src={actionItem.icon} alt={actionItem.label} width={30} height={30} />
                   {actionItem.label}
                 </Link>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Image
-                    src={actionItem.icon}
-                    alt={actionItem.label}
-                    width={30}
-                    height={30}
-                  />
+                  <Image src={actionItem.icon} alt={actionItem.label} width={30} height={30} />
                   {actionItem.label}
                 </div>
               )}
