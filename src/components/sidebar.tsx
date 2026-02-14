@@ -16,7 +16,7 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
   const pathname = usePathname();
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar remove-scrollbar">
       <Link href="/">
         <Image src="/assets/icons/logo-full-brand.svg" alt="logo" width={160} height={50} className="hidden lg:block" />
         <Image src="/assets/icons/logo-brand.svg" alt="logo" width={52} height={52} className="lg:hidden" />
@@ -47,7 +47,7 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
         <Image src={avatar} alt="Avatar" width={44} height={44} className="sidebar-user-avatar" />
         <div className="hidden lg:block">
           <p className="subtitle-2 capitalize">{fullName}</p>
-          <p className="caption">{email}</p>
+          <p className="caption w-36! truncate!">{email}</p>
         </div>
       </div>
     </aside>

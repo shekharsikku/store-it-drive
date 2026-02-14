@@ -38,10 +38,10 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
               <Image src={avatar} alt="avatar" width={44} height={44} className="header-user-avatar" />
               <div className="sm:hidden lg:block">
                 <p className="subtitle-2 capitalize">{fullName}</p>
-                <p className="caption">{email}</p>
+                <p className="caption w-30! truncate!">{email}</p>
               </div>
             </div>
-            <Separator className="mb-4 bg-light-200/20" />
+            <Separator className="mb-4 bg-light-200/20!" />
           </SheetTitle>
 
           <nav className="mobile-nav">
@@ -63,7 +63,7 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
             </ul>
           </nav>
 
-          <Separator className="my-5 bg-light-200/20" />
+          <Separator className="my-5 bg-light-200/20!" />
 
           <div className="flex flex-col justify-between gap-5 pb-5">
             <FileUploader ownerId={ownerId} accountId={accountId} className="w-full" />

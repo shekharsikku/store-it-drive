@@ -114,9 +114,9 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
         <DropdownMenuTrigger className="shad-no-focus">
           <Image src="/assets/icons/dots.svg" alt="dots" width={30} height={30} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel className="min-w-[160px] max-w-[200px] truncate">{file.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+        <DropdownMenuContent className="bg-white! text-black! border-none! mr-4 lg:mr-8">
+          <DropdownMenuLabel className="min-w-36 xl:min-w-40 max-w-40 truncate">{file.name}</DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-light-200/20!" />
           {actionsDropdownItems.map((actionItem) => (
             <DropdownMenuItem
               key={actionItem.value}

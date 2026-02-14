@@ -39,7 +39,7 @@ const Dashboard = async () => {
                 </div>
 
                 <h5 className="summary-type-title">{summary.title}</h5>
-                <Separator className="bg-light-400" />
+                <Separator className="bg-light-400!" />
                 <FormattedDateTime date={summary.latestDate} className="text-center" />
               </div>
             </Link>
@@ -48,12 +48,17 @@ const Dashboard = async () => {
       </section>
 
       {/* Recent files uploaded */}
-      <section className="dashboard-recent-files">
+      <section className="dashboard-recent-files custom-scrollbar">
         <h2 className="h3 xl:h2 text-light-100">Recent files uploaded</h2>
         {files.documents.length > 0 ? (
-          <ul className="mt-5 flex flex-col gap-5">
+          <ul className="mt-5 flex flex-col gap-2">
             {files.documents.map((file: Models.Document) => (
-              <Link href={file.url} target="_blank" className="flex items-center gap-3" key={file.$id}>
+              <Link
+                href={file.url}
+                target="_blank"
+                className="flex items-center gap-3 hover:bg-neutral-50 p-2 rounded"
+                key={file.$id}
+              >
                 <Thumbnail type={file.type} extension={file.extension} url={file.url} />
 
                 <div className="recent-file-details">

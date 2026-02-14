@@ -20,7 +20,7 @@ const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
       <section className="flex h-full flex-1 flex-col">
         <MobileNavigation {...currentUser} />
         <Header userId={currentUser.$id} accountId={currentUser.accountId} />
-        <div className="main-content">{children}</div>
+        <div className="main-content remove-scrollbar">{children}</div>
       </section>
 
       <Toaster />
