@@ -81,7 +81,13 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
 
                   <div className="preview-item-name">
                     {file.name}
-                    <Image src="/assets/icons/file-loader.gif" width={80} height={26} alt="Loader" />
+                    <Image
+                      src="/assets/icons/file-loader.gif"
+                      width={80}
+                      height={26}
+                      alt="Loader"
+                      className="w-20 h-6.5"
+                    />
                   </div>
                 </div>
 

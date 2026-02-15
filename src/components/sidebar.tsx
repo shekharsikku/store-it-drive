@@ -18,8 +18,14 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
   return (
     <aside className="sidebar remove-scrollbar">
       <Link href="/">
-        <Image src="/assets/icons/logo-full-brand.svg" alt="logo" width={160} height={50} className="hidden lg:block" />
-        <Image src="/assets/icons/logo-brand.svg" alt="logo" width={52} height={52} className="lg:hidden" />
+        <Image
+          src="/assets/icons/logo-full-brand.svg"
+          alt="logo"
+          width={160}
+          height={50}
+          className="hidden lg:block w-40 h-12.5"
+        />
+        <Image src="/assets/icons/logo-brand.svg" alt="logo" width={52} height={52} className="lg:hidden size-13" />
       </Link>
 
       <nav className="sidebar-nav">
