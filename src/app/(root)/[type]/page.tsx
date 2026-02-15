@@ -2,7 +2,7 @@ import type { Models } from "node-appwrite";
 import { Card } from "@/components/card";
 import { Sort } from "@/components/sort";
 import { getFiles } from "@/lib/actions/file.actions";
-import { getFileTypesParams } from "@/lib/utils";
+import { convertFileSize, getFileTypesParams } from "@/lib/utils";
 
 const TypePage = async ({ searchParams, params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
@@ -13,6 +13,10 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
 
   const files = await getFiles({ types, searchText, sort });
 
+  const totalSize = files.documents.reduce((total: number, file: Models.Document) => {
+    return total + (file.size || 0);
+  }, 0);
+
   return (
     <div className="page-container">
       <section className="w-full">
@@ -20,7 +24,7 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
 
         <div className="total-size-section">
           <p className="body-1">
-            Total: <span className="h5">0 MB</span>
+            Total: <span className="h5">{convertFileSize(totalSize)}</span>
           </p>
 
           <div className="sort-container">
