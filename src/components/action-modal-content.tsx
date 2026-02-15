@@ -1,6 +1,8 @@
+import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import type { Models } from "node-appwrite";
 import type React from "react";
+import { useState } from "react";
 import { FormattedDateTime } from "@/components/formatted-datetime";
 import { Thumbnail } from "@/components/thumbnail";
 import { Button } from "@/components/ui/button";
@@ -45,12 +47,38 @@ interface Props {
 }
 
 export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(file.url);
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000); // revert after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
     <>
       <ImageThumbnail file={file} />
 
       <div className="share-wrapper">
-        <p className="subtitle-2 pl-1 text-light-100">Share file with other users</p>
+        <div className="flex justify-between">
+          <p className="subtitle-2 pl-1 text-light-100">Share file with other users</p>
+
+          {/* Icon for copy file url. */}
+          <button type="button" onClick={handleCopy} className="mr-2 transition-transform active:scale-90">
+            {copied ? (
+              <Check className="size-4 text-green-500" />
+            ) : (
+              <Copy className="size-4 text-brand cursor-pointer" />
+            )}
+          </button>
+        </div>
         <Input
           id="share"
           type="email"
