@@ -49,7 +49,7 @@ const Dashboard = async () => {
 
       {/* Recent files uploaded */}
       <section className="dashboard-recent-files custom-scrollbar">
-        <h2 className="h3 xl:h2 text-light-100">Recent files uploaded</h2>
+        <h2 className="recent-file-heading">Recent files uploaded</h2>
         {files.documents.length > 0 ? (
           <ul className="mt-5 flex flex-col gap-2">
             {files.documents.map((file: Models.Document) => (
@@ -62,11 +62,13 @@ const Dashboard = async () => {
                 <Thumbnail type={file.type} extension={file.extension} url={file.url} />
 
                 <div className="recent-file-details">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-1 justify-between min-w-0 flex-1">
                     <p className="recent-file-name">{file.name}</p>
                     <FormattedDateTime date={file.$createdAt} className="caption" />
                   </div>
-                  <ActionDropdown file={file} />
+                  <div className="shrink-0">
+                    <ActionDropdown file={file} />
+                  </div>
                 </div>
               </Link>
             ))}

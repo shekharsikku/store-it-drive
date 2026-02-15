@@ -47,7 +47,7 @@ const OtpModal = ({ accountId, email }: { accountId: string; email: string }) =>
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent className="shad-alert-dialog">
-        <AlertDialogHeader className="relative flex justify-center">
+        <AlertDialogHeader className="otp-dialog-header">
           <AlertDialogTitle className="h2 text-center">
             Enter Your OTP
             <Image

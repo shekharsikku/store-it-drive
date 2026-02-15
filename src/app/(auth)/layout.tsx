@@ -16,6 +16,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             alt="Files"
             width={310}
             height={310}
+            loading="eager"
             className="transition-all duration-300 hover:rotate-2 hover:scale-105"
           />
         </div>
