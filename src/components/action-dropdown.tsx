@@ -5,9 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Models } from "node-appwrite";
 import { useState } from "react";
-import { FileDetails, ShareInput } from "@/components/action-modal-content";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ActionDialogContent } from "@/components/action-dialog-content";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { actionsDropdownItems } from "@/constants";
 import { deleteFile, renameFile, updateFileUsers } from "@/lib/actions/file.actions";
 import { constructDownloadUrl } from "@/lib/utils";
@@ -25,7 +22,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState<ActionType | null>(null);
-  const [name, setName] = useState(file.name);
+  const [filename, setFilename] = useState(file.name);
   const [isLoading, setIsLoading] = useState(false);
   const [emails, setEmails] = useState<string[]>([]);
 
@@ -35,8 +32,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     setIsModalOpen(false);
     setIsDropdownOpen(false);
     setAction(null);
-    setName(file.name);
-    // setEmails([]);
+    setFilename(file.name);
   };
 
   const handleAction = async () => {
@@ -45,7 +41,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     let success = false;
 
     const actions = {
-      rename: () => renameFile({ fileId: file.$id, name, extension: file.extension, path }),
+      rename: () => renameFile({ fileId: file.$id, name: filename, extension: file.extension, path }),
       share: () => updateFileUsers({ fileId: file.$id, emails, path }),
       delete: () => deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path }),
     };
@@ -70,46 +66,8 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     closeAllModals();
   };
 
-  const renderDialogContent = () => {
-    if (!action) return null;
-
-    const { value, label } = action;
-
-    return (
-      <DialogContent className="shad-dialog button">
-        <DialogHeader className="flex flex-col gap-3">
-          <DialogTitle className="text-center text-light-100">{label}</DialogTitle>
-          {value === "rename" && (
-            <Input id="rename" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-          )}
-          {value === "details" && <FileDetails file={file} />}
-          {value === "share" && <ShareInput file={file} onInputChange={setEmails} onRemove={handleRemoveUser} />}
-          {value === "delete" && (
-            <p className="delete-confirmation">
-              Are you sure you want to delete{` `}
-              <span className="delete-file-name">{file.name}</span>?
-            </p>
-          )}
-        </DialogHeader>
-        {["rename", "delete", "share"].includes(value) && (
-          <DialogFooter className="flex flex-col gap-3 md:flex-row">
-            <Button onClick={closeAllModals} className="modal-cancel-button">
-              Cancel
-            </Button>
-            <Button onClick={handleAction} className="modal-submit-button">
-              <p className="capitalize">{value}</p>
-              {isLoading && (
-                <Image src="/assets/icons/loader.svg" alt="loader" width={24} height={24} className="animate-spin" />
-              )}
-            </Button>
-          </DialogFooter>
-        )}
-      </DialogContent>
-    );
-  };
-
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger className="shad-no-focus">
           <Image src="/assets/icons/dots.svg" alt="dots" width={30} height={30} />
@@ -123,6 +81,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
               className="shad-dropdown-item"
               onClick={() => {
                 setAction(actionItem);
+                setIsDropdownOpen(false); // 🔥 CLOSE DROPDOWN FIRST
 
                 if (["rename", "share", "delete", "details"].includes(actionItem.value)) {
                   setIsModalOpen(true);
@@ -149,8 +108,21 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {renderDialogContent()}
-    </Dialog>
+      {/* Render Dialog Content */}
+      <ActionDialogContent
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        action={action}
+        file={file}
+        closeAllModals={closeAllModals}
+        filename={filename}
+        setFilename={setFilename}
+        setEmails={setEmails}
+        handleRemoveUser={handleRemoveUser}
+        handleAction={handleAction}
+        isLoading={isLoading}
+      />
+    </>
   );
 };
 

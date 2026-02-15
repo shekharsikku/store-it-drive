@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* @import "tw-animate-css"; */
+@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @plugin "tailwindcss-animate";
 
@@ -141,7 +141,7 @@
 
 @layer base {
   * {
-    @apply scroll-smooth;
+    @apply scroll-smooth select-none;
     @apply border-border outline-ring/50;
   }
 
@@ -317,7 +317,7 @@
     @apply cursor-pointer focus:bg-neutral-100! focus:text-neutral-900! hover:bg-neutral-100! hover:text-neutral-900!;
   }
   .shad-dialog {
-    @apply rounded-[26px] w-[90%]! max-w-100 px-6 py-8 bg-white!;
+    @apply rounded-[26px] min-w-80 max-w-100 flex flex-col px-6 py-8 bg-white!;
   }
   .shad-chart-title {
     @apply text-white;
@@ -338,7 +338,7 @@
 
   /* Root Layout */
   .main-content {
-    @apply h-full flex-1 overflow-auto bg-light-400 px-5 py-7 sm:mr-7 sm:rounded-[30px] md:mb-7 md:px-9 md:py-10;
+    @apply h-full w-full flex-1 overflow-y-auto bg-light-400 px-5 py-7 sm:mr-7 sm:rounded-[30px] md:mb-7 md:px-9 md:py-10;
   }
 
   /* Dashboard */
@@ -364,10 +364,10 @@
     @apply h-full rounded-2xl xl:h-163.5 overflow-auto bg-white p-5 xl:p-7;
   }
   .recent-file-details {
-    @apply flex w-full justify-between items-center;
+    @apply flex w-full justify-between items-center min-w-0;
   }
   .recent-file-name {
-    @apply text-[14px] leading-5 font-semibold line-clamp-1 w-full text-light-100 sm:max-w-50 lg:max-w-62.5 xl:max-w-72;
+    @apply text-[14px] leading-5 font-semibold line-clamp-1 text-light-100 truncate;
   }
   .recent-file-date {
     @apply text-[14px] leading-5 font-normal text-light-100/80;
@@ -425,7 +425,7 @@
     @apply text-[14px] leading-5 font-normal outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 h-13 w-full rounded-full border px-4 shadow-drop-1 border-neutral-200;
   }
   .share-remove-user {
-    @apply rounded-full bg-transparent text-light-100 shadow-none hover:bg-transparent;
+    @apply rounded-full bg-transparent text-light-100 shadow-none hover:bg-transparent cursor-pointer;
   }
   .remove-icon {
     @apply aspect-square rounded-full;
@@ -447,7 +447,7 @@
 
   /* Card */
   .file-card {
-    @apply flex cursor-pointer flex-col gap-6 rounded-[18px] bg-white p-5 shadow-sm transition-all hover:shadow-drop-3;
+    @apply min-w-0 flex cursor-pointer flex-col gap-6 rounded-[18px] bg-white p-5 shadow-sm transition-all hover:shadow-drop-3;
   }
   .file-card-details {
     @apply flex flex-col gap-2 text-light-100;
@@ -585,5 +585,14 @@
   }
   .thumbnail-image {
     @apply size-full! object-cover object-center;
+  }
+
+  /* Styles for fix UI */
+  .recent-file-heading {
+    @apply text-light-100 text-[20px] leading-7 font-semibold xl:text-[24px] xl:leading-9 xl:font-bold;
+  }
+
+  .otp-dialog-header {
+    @apply relative flex flex-col text-center sm:text-left justify-center! items-center!;
   }
 }
