@@ -126,7 +126,6 @@ export const constructDownloadUrl = (bucketFileId: string) => {
 };
 
 /** Dashboard Utils */
-// biome-ignore lint/suspicious/noExplicitAny: <type not confirm for document>
 export const getUsageSummary = (totalSpace: any) => {
   return [
     {

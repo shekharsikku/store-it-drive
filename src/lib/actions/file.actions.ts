@@ -8,6 +8,18 @@ import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
 
+export interface FileDocument extends Models.Document {
+  type: string;
+  name: string;
+  url: string;
+  extension: string;
+  size: number;
+  owner: any;
+  accountId: string;
+  users: string[];
+  bucketFileId: string;
+}
+
 const handleError = (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
