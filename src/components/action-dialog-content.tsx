@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import type { Models } from "node-appwrite";
 import { FileDetails, ShareInput } from "@/components/action-modal-content";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import type { FileDocument } from "@/lib/actions/file.actions";
 
 interface DialogProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   action: ActionType | null;
-  file: Models.Document;
+  file: FileDocument;
   closeAllModals: () => void;
   filename: string;
   setFilename: React.Dispatch<React.SetStateAction<string>>;

@@ -41,7 +41,6 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           });
         }
 
-        // biome-ignore lint/suspicious/noExplicitAny: <type of file is not confirmed>
         return uploadFile({ file, ownerId, accountId, path }).then((uploadedFile: any) => {
           if (uploadedFile) {
             setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name));

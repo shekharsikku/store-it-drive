@@ -1,15 +1,15 @@
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
-import type { Models } from "node-appwrite";
 import type React from "react";
 import { useState } from "react";
 import { FormattedDateTime } from "@/components/formatted-datetime";
 import { Thumbnail } from "@/components/thumbnail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { FileDocument } from "@/lib/actions/file.actions";
 import { convertFileSize, formatDateTime } from "@/lib/utils";
 
-const ImageThumbnail = ({ file }: { file: Models.Document }) => (
+const ImageThumbnail = ({ file }: { file: FileDocument }) => (
   <div className="file-details-thumbnail">
     <Thumbnail type={file.type} extension={file.extension} url={file.url} />
     <div className="min-w-0 lex flex-col">
@@ -26,7 +26,7 @@ const DetailRow = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-export const FileDetails = ({ file }: { file: Models.Document }) => {
+export const FileDetails = ({ file }: { file: FileDocument }) => {
   return (
     <>
       <ImageThumbnail file={file} />
@@ -41,7 +41,7 @@ export const FileDetails = ({ file }: { file: Models.Document }) => {
 };
 
 interface Props {
-  file: Models.Document;
+  file: FileDocument;
   onInputChange: React.Dispatch<React.SetStateAction<string[]>>;
   onRemove: (email: string) => void;
 }

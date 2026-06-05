@@ -1,13 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Models } from "node-appwrite";
-
 import { ActionDropdown } from "@/components/action-dropdown";
 import { Chart } from "@/components/chart";
 import { FormattedDateTime } from "@/components/formatted-datetime";
 import { Thumbnail } from "@/components/thumbnail";
 import { Separator } from "@/components/ui/separator";
-import { getFiles, getTotalSpaceUsed } from "@/lib/actions/file.actions";
+import { type FileDocument, getFiles, getTotalSpaceUsed } from "@/lib/actions/file.actions";
 import { convertFileSize, getUsageSummary } from "@/lib/utils";
 
 const Dashboard = async () => {
@@ -52,7 +50,7 @@ const Dashboard = async () => {
         <h2 className="recent-file-heading">Recent files uploaded</h2>
         {files.documents.length > 0 ? (
           <ul className="mt-5 flex flex-col gap-2">
-            {files.documents.map((file: Models.Document) => (
+            {files.documents.map((file: FileDocument) => (
               <Link
                 href={file.url}
                 target="_blank"

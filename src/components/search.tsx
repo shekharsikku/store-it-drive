@@ -2,19 +2,18 @@
 
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { Models } from "node-appwrite";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { FormattedDateTime } from "@/components/formatted-datetime";
 import { Thumbnail } from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
-import { getFiles } from "@/lib/actions/file.actions";
+import { type FileDocument, getFiles } from "@/lib/actions/file.actions";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("query") || "";
-  const [results, setResults] = useState<Models.Document[]>([]);
+  const [results, setResults] = useState<FileDocument[]>([]);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
@@ -42,7 +41,7 @@ const Search = () => {
     }
   }, [searchQuery]);
 
-  const handleClickItem = (file: Models.Document) => {
+  const handleClickItem = (file: FileDocument) => {
     setOpen(false);
     setResults([]);
 

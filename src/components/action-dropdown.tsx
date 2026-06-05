@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Models } from "node-appwrite";
 import { useState } from "react";
 import { ActionDialogContent } from "@/components/action-dialog-content";
 import {
@@ -15,10 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { actionsDropdownItems } from "@/constants";
-import { deleteFile, renameFile, updateFileUsers } from "@/lib/actions/file.actions";
+import { deleteFile, type FileDocument, renameFile, updateFileUsers } from "@/lib/actions/file.actions";
 import { constructDownloadUrl } from "@/lib/utils";
 
-const ActionDropdown = ({ file }: { file: Models.Document }) => {
+const ActionDropdown = ({ file }: { file: FileDocument }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState<ActionType | null>(null);

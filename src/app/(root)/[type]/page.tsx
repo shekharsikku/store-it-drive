@@ -1,7 +1,6 @@
-import type { Models } from "node-appwrite";
 import { Card } from "@/components/card";
 import { Sort } from "@/components/sort";
-import { getFiles } from "@/lib/actions/file.actions";
+import { type FileDocument, getFiles } from "@/lib/actions/file.actions";
 import { convertFileSize, getFileTypesParams } from "@/lib/utils";
 
 const TypePage = async ({ searchParams, params }: SearchParamProps) => {
@@ -13,7 +12,7 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
 
   const files = await getFiles({ types, searchText, sort });
 
-  const totalSize = files.documents.reduce((total: number, file: Models.Document) => {
+  const totalSize = files.documents.reduce((total: number, file: FileDocument) => {
     return total + (file.size || 0);
   }, 0);
 
@@ -38,7 +37,7 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
       {/* Render the files */}
       {files.total > 0 ? (
         <section className="file-list">
-          {files.documents.map((file: Models.Document) => (
+          {files.documents.map((file: FileDocument) => (
             <Card key={file.$id} file={file} />
           ))}
         </section>
