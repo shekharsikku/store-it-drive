@@ -20,6 +20,7 @@ const Thumbnail = ({ type, extension, url = "", imageClassName, className }: Pro
         width={100}
         height={100}
         className={cn("size-8 object-contain", imageClassName, isImage && "thumbnail-image")}
+        loading="eager"
       />
     </figure>
   );

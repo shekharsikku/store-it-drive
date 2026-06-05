@@ -30,6 +30,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             width={224}
             height={82}
             className="h-auto w-50 lg:w-62.5"
+            loading="eager"
           />
         </div>
 
