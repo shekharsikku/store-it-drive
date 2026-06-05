@@ -19,7 +19,11 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
   try {
     const inputFile = InputFile.fromBuffer(file, file.name);
 
-    const bucketFile = await storage.createFile(appwriteConfig.bucketId, ID.unique(), inputFile);
+    const bucketFile = await storage.createFile({
+      bucketId: appwriteConfig.bucketId,
+      fileId: ID.unique(),
+      file: inputFile,
+    });
 
     const fileDocument = {
       type: getFileType(bucketFile.name).type,
@@ -34,9 +38,14 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
     };
 
     const newFile = await databases
-      .createDocument(appwriteConfig.databaseId, appwriteConfig.filesCollectionId, ID.unique(), fileDocument)
+      .createDocument({
+        databaseId: appwriteConfig.databaseId,
+        collectionId: appwriteConfig.filesCollectionId,
+        documentId: ID.unique(),
+        data: fileDocument,
+      })
       .catch(async (error: unknown) => {
-        await storage.deleteFile(appwriteConfig.bucketId, bucketFile.$id);
+        await storage.deleteFile({ bucketId: appwriteConfig.bucketId, fileId: bucketFile.$id });
         handleError(error, "Failed to create file document");
       });
 
@@ -47,8 +56,15 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
   }
 };
 
+interface UserDocument extends Models.Document {
+  fullName: string;
+  email: string;
+  avatar: string;
+  accountId: string;
+}
+
 const createQueries = (
-  currentUser: Models.Document,
+  currentUser: UserDocument,
   types: string[],
   searchText: string,
   sort: string,
@@ -79,7 +95,11 @@ export const getFiles = async ({ types = [], searchText = "", sort = "$createdAt
 
     const queries = createQueries(currentUser, types, searchText, sort, limit);
 
-    const files = await databases.listDocuments(appwriteConfig.databaseId, appwriteConfig.filesCollectionId, queries);
+    const files = await databases.listDocuments({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.filesCollectionId,
+      queries,
+    });
 
     console.log({ files });
     return parseStringify(files);
@@ -93,14 +113,12 @@ export const renameFile = async ({ fileId, name, extension, path }: RenameFilePr
 
   try {
     const newName = `${name}.${extension}`;
-    const updatedFile = await databases.updateDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.filesCollectionId,
-      fileId,
-      {
-        name: newName,
-      },
-    );
+    const updatedFile = await databases.updateDocument({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.filesCollectionId,
+      documentId: fileId,
+      data: { name: newName },
+    });
 
     revalidatePath(path);
     return parseStringify(updatedFile);
@@ -113,14 +131,12 @@ export const updateFileUsers = async ({ fileId, emails, path }: UpdateFileUsersP
   const { databases } = await createAdminClient();
 
   try {
-    const updatedFile = await databases.updateDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.filesCollectionId,
-      fileId,
-      {
-        users: emails,
-      },
-    );
+    const updatedFile = await databases.updateDocument({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.filesCollectionId,
+      documentId: fileId,
+      data: { users: emails },
+    });
 
     revalidatePath(path);
     return parseStringify(updatedFile);
@@ -133,14 +149,14 @@ export const deleteFile = async ({ fileId, bucketFileId, path }: DeleteFileProps
   const { databases, storage } = await createAdminClient();
 
   try {
-    const deletedFile = await databases.deleteDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.filesCollectionId,
-      fileId,
-    );
+    const deletedFile = await databases.deleteDocument({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.filesCollectionId,
+      documentId: fileId,
+    });
 
     if (deletedFile) {
-      await storage.deleteFile(appwriteConfig.bucketId, bucketFileId);
+      await storage.deleteFile({ bucketId: appwriteConfig.bucketId, fileId: bucketFileId });
     }
 
     revalidatePath(path);
@@ -157,9 +173,11 @@ export async function getTotalSpaceUsed() {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User is not authenticated.");
 
-    const files = await databases.listDocuments(appwriteConfig.databaseId, appwriteConfig.filesCollectionId, [
-      Query.equal("owner", [currentUser.$id]),
-    ]);
+    const files = await databases.listDocuments({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.filesCollectionId,
+      queries: [Query.equal("owner", [currentUser.$id])],
+    });
 
     const totalSpace = {
       image: { size: 0, latestDate: "" },

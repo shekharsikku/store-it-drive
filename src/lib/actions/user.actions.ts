@@ -11,9 +11,11 @@ import { parseStringify } from "@/lib/utils";
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
 
-  const result = await databases.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, [
-    Query.equal("email", [email]),
-  ]);
+  const result = await databases.listDocuments({
+    databaseId: appwriteConfig.databaseId,
+    collectionId: appwriteConfig.usersCollectionId,
+    queries: [Query.equal("email", [email])],
+  });
 
   return result.total > 0 ? result.documents[0] : null;
 };
@@ -27,7 +29,10 @@ export const sendEmailOTP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
 
   try {
-    const session = await account.createEmailToken(ID.unique(), email);
+    const session = await account.createEmailToken({
+      userId: ID.unique(),
+      email,
+    });
 
     return session.userId;
   } catch (error) {
@@ -44,11 +49,16 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
   if (!existingUser) {
     const { databases } = await createAdminClient();
 
-    await databases.createDocument(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, ID.unique(), {
-      fullName,
-      email,
-      avatar: avatarPlaceholderUrl,
-      accountId,
+    await databases.createDocument({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.usersCollectionId,
+      documentId: ID.unique(),
+      data: {
+        fullName,
+        email,
+        avatar: avatarPlaceholderUrl,
+        accountId,
+      },
     });
   }
 
@@ -59,7 +69,7 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
   try {
     const { account } = await createAdminClient();
 
-    const session = await account.createSession(accountId, password);
+    const session = await account.createSession({ userId: accountId, secret: password });
 
     (await cookies()).set("appwrite-session", session.secret, {
       path: "/",
@@ -80,9 +90,11 @@ export const getCurrentUser = async () => {
 
     const result = await account.get();
 
-    const user = await databases.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, [
-      Query.equal("accountId", result.$id),
-    ]);
+    const user = await databases.listDocuments({
+      databaseId: appwriteConfig.databaseId,
+      collectionId: appwriteConfig.usersCollectionId,
+      queries: [Query.equal("accountId", result.$id)],
+    });
 
     if (user.total <= 0) return null;
 
@@ -96,7 +108,7 @@ export const signOutUser = async () => {
   const { account } = await createSessionClient();
 
   try {
-    await account.deleteSession("current");
+    await account.deleteSession({ sessionId: "current" });
     (await cookies()).delete("appwrite-session");
   } catch (error) {
     handleError(error, "Failed to sign out user");
