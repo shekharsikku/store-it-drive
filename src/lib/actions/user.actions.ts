@@ -9,15 +9,15 @@ import { appwriteConfig } from "@/lib/appwrite/config";
 import { parseStringify } from "@/lib/utils";
 
 const getUserByEmail = async (email: string) => {
-  const { databases } = await createAdminClient();
+  const { tables } = await createAdminClient();
 
-  const result = await databases.listDocuments({
+  const result = await tables.listRows({
     databaseId: appwriteConfig.databaseId,
-    collectionId: appwriteConfig.usersCollectionId,
-    queries: [Query.equal("email", [email])],
+    tableId: appwriteConfig.usersTableId,
+    queries: [Query.equal("email", email)],
   });
 
-  return result.total > 0 ? result.documents[0] : null;
+  return result.total > 0 ? result.rows[0] : null;
 };
 
 const handleError = (error: unknown, message: string) => {
@@ -47,12 +47,12 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
   if (!accountId) throw new Error("Failed to send an OTP");
 
   if (!existingUser) {
-    const { databases } = await createAdminClient();
+    const { tables } = await createAdminClient();
 
-    await databases.createDocument({
+    await tables.createRow({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.usersCollectionId,
-      documentId: ID.unique(),
+      tableId: appwriteConfig.usersTableId,
+      rowId: ID.unique(),
       data: {
         fullName,
         email,
@@ -86,19 +86,19 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
 
 export const getCurrentUser = async () => {
   try {
-    const { databases, account } = await createSessionClient();
+    const { account, tables } = await createSessionClient();
 
     const result = await account.get();
 
-    const user = await databases.listDocuments({
+    const user = await tables.listRows({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.usersCollectionId,
+      tableId: appwriteConfig.usersTableId,
       queries: [Query.equal("accountId", result.$id)],
     });
 
     if (user.total <= 0) return null;
 
-    return parseStringify(user.documents[0]);
+    return parseStringify(user.rows[0]);
   } catch (error) {
     console.log(error);
   }
