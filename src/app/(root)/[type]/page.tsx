@@ -12,7 +12,7 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
 
   const files = await getFiles({ types, searchText, sort });
 
-  const totalSize = files.documents.reduce((total: number, file: FileDocument) => {
+  const totalSize = files.rows.reduce((total: number, file: FileDocument) => {
     return total + (file.size || 0);
   }, 0);
 
@@ -37,7 +37,7 @@ const TypePage = async ({ searchParams, params }: SearchParamProps) => {
       {/* Render the files */}
       {files.total > 0 ? (
         <section className="file-list">
-          {files.documents.map((file: FileDocument) => (
+          {files.rows.map((file: FileDocument) => (
             <Card key={file.$id} file={file} />
           ))}
         </section>
