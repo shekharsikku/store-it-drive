@@ -8,13 +8,20 @@ import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
 
+export interface UserDocument extends Models.Document {
+  fullName: string;
+  email: string;
+  avatar: string;
+  accountId: string;
+}
+
 export interface FileDocument extends Models.Document {
   type: string;
   name: string;
   url: string;
   extension: string;
   size: number;
-  owner: any;
+  owner: UserDocument;
   accountId: string;
   users: string[];
   bucketFileId: string;
@@ -26,7 +33,7 @@ const handleError = (error: unknown, message: string) => {
 };
 
 export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileProps) => {
-  const { storage, databases } = await createAdminClient();
+  const { storage, tables } = await createAdminClient();
 
   try {
     const inputFile = InputFile.fromBuffer(file, file.name);
@@ -49,11 +56,11 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
       bucketFileId: bucketFile.$id,
     };
 
-    const newFile = await databases
-      .createDocument({
+    const newFile = await tables
+      .createRow({
         databaseId: appwriteConfig.databaseId,
-        collectionId: appwriteConfig.filesCollectionId,
-        documentId: ID.unique(),
+        tableId: appwriteConfig.filesTableId,
+        rowId: ID.unique(),
         data: fileDocument,
       })
       .catch(async (error: unknown) => {
@@ -67,13 +74,6 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
     handleError(error, "Failed to upload file");
   }
 };
-
-interface UserDocument extends Models.Document {
-  fullName: string;
-  email: string;
-  avatar: string;
-  accountId: string;
-}
 
 const createQueries = (
   currentUser: UserDocument,
@@ -101,7 +101,7 @@ const createQueries = (
 };
 
 export const getFiles = async ({ types = [], searchText = "", sort = "$createdAt-desc", limit }: GetFilesProps) => {
-  const { databases } = await createAdminClient();
+  const { tables } = await createAdminClient();
 
   try {
     const currentUser = await getCurrentUser();
@@ -110,13 +110,12 @@ export const getFiles = async ({ types = [], searchText = "", sort = "$createdAt
 
     const queries = createQueries(currentUser, types, searchText, sort, limit);
 
-    const files = await databases.listDocuments({
+    const files = await tables.listRows({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.filesCollectionId,
+      tableId: appwriteConfig.filesTableId,
       queries,
     });
 
-    console.log({ files });
     return parseStringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");
@@ -124,14 +123,14 @@ export const getFiles = async ({ types = [], searchText = "", sort = "$createdAt
 };
 
 export const renameFile = async ({ fileId, name, extension, path }: RenameFileProps) => {
-  const { databases } = await createAdminClient();
+  const { tables } = await createAdminClient();
 
   try {
     const newName = `${name}.${extension}`;
-    const updatedFile = await databases.updateDocument({
+    const updatedFile = await tables.updateRow({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.filesCollectionId,
-      documentId: fileId,
+      tableId: appwriteConfig.filesTableId,
+      rowId: fileId,
       data: { name: newName },
     });
 
@@ -143,31 +142,31 @@ export const renameFile = async ({ fileId, name, extension, path }: RenameFilePr
 };
 
 export const updateFileUsers = async ({ fileId, emails, path }: UpdateFileUsersProps) => {
-  const { databases } = await createAdminClient();
+  const { tables } = await createAdminClient();
 
   try {
-    const updatedFile = await databases.updateDocument({
+    const updatedFile = await tables.updateRow({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.filesCollectionId,
-      documentId: fileId,
+      tableId: appwriteConfig.filesTableId,
+      rowId: fileId,
       data: { users: emails },
     });
 
     revalidatePath(path);
     return parseStringify(updatedFile);
   } catch (error) {
-    handleError(error, "Failed to rename file");
+    handleError(error, "Failed to update file users");
   }
 };
 
 export const deleteFile = async ({ fileId, bucketFileId, path }: DeleteFileProps) => {
-  const { databases, storage } = await createAdminClient();
+  const { tables, storage } = await createAdminClient();
 
   try {
-    const deletedFile = await databases.deleteDocument({
+    const deletedFile = await tables.deleteRow({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.filesCollectionId,
-      documentId: fileId,
+      tableId: appwriteConfig.filesTableId,
+      rowId: fileId,
     });
 
     if (deletedFile) {
@@ -177,20 +176,20 @@ export const deleteFile = async ({ fileId, bucketFileId, path }: DeleteFileProps
     revalidatePath(path);
     return parseStringify({ status: "success" });
   } catch (error) {
-    handleError(error, "Failed to rename file");
+    handleError(error, "Failed to delete file");
   }
 };
 
 /** Total file space used */
 export async function getTotalSpaceUsed() {
   try {
-    const { databases } = await createSessionClient();
+    const { tables } = await createSessionClient();
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User is not authenticated.");
 
-    const files = await databases.listDocuments({
+    const files = await tables.listRows({
       databaseId: appwriteConfig.databaseId,
-      collectionId: appwriteConfig.filesCollectionId,
+      tableId: appwriteConfig.filesTableId,
       queries: [Query.equal("owner", [currentUser.$id])],
     });
 
@@ -204,7 +203,7 @@ export async function getTotalSpaceUsed() {
       all: 2 * 1024 * 1024 * 1024 /* 2GB available bucket storage */,
     };
 
-    files.documents.forEach((file) => {
+    files.rows.forEach((file) => {
       const fileType = file.type as FileType;
       totalSpace[fileType].size += file.size;
       totalSpace.used += file.size;
@@ -216,6 +215,6 @@ export async function getTotalSpaceUsed() {
 
     return parseStringify(totalSpace);
   } catch (error) {
-    handleError(error, "Error calculating total space used:, ");
+    handleError(error, "Error calculating total space used");
   }
 }

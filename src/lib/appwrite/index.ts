@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { Account, Avatars, Client, Databases, Storage } from "node-appwrite";
+import { Account, Avatars, Client, Storage, TablesDB } from "node-appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 
 export const createSessionClient = async () => {
@@ -17,8 +17,8 @@ export const createSessionClient = async () => {
     get account() {
       return new Account(client);
     },
-    get databases() {
-      return new Databases(client);
+    get tables() {
+      return new TablesDB(client);
     },
   };
 };
@@ -33,8 +33,8 @@ export const createAdminClient = async () => {
     get account() {
       return new Account(client);
     },
-    get databases() {
-      return new Databases(client);
+    get tables() {
+      return new TablesDB(client);
     },
     get storage() {
       return new Storage(client);
