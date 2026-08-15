@@ -8,19 +8,12 @@ import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { UserAvatar } from "@/components/user-avatar";
 import { navItems } from "@/constants";
-import { signOutUser } from "@/lib/actions/user.actions";
+import { signOutUser, type UserDocument } from "@/lib/actions/user.actions";
 import { cn } from "@/lib/utils";
 
-interface Props {
-  $id: string;
-  accountId: string;
-  fullName: string;
-  avatar: string;
-  email: string;
-}
-
-const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: Props) => {
+const MobileNavigation = ({ $id: ownerId, accountId, fullName, email }: UserDocument) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -35,10 +28,10 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
         <SheetContent className="shad-sheet h-screen px-3">
           <SheetTitle>
             <div className="header-user">
-              <Image src={avatar} alt="avatar" width={44} height={44} className="header-user-avatar" />
+              <UserAvatar seed={accountId} />
               <div className="sm:hidden lg:block">
                 <p className="subtitle-2 capitalize">{fullName}</p>
-                <p className="caption w-30! truncate!">{email}</p>
+                <p className="caption w-36! truncate!">{email}</p>
               </div>
             </div>
             <Separator className="mb-4 bg-light-200/20!" />
