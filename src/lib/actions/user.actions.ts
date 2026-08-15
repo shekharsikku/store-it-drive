@@ -2,11 +2,16 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ID, Query } from "node-appwrite";
-import { avatarPlaceholderUrl } from "@/constants";
+import { ID, type Models, Query } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { parseStringify } from "@/lib/utils";
+
+export interface UserDocument extends Models.Document {
+  fullName: string;
+  email: string;
+  accountId: string;
+}
 
 const getUserByEmail = async (email: string) => {
   const { tables } = await createAdminClient();
@@ -56,7 +61,6 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
       data: {
         fullName,
         email,
-        avatar: avatarPlaceholderUrl,
         accountId,
       },
     });

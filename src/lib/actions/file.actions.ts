@@ -3,17 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { ID, type Models, Query } from "node-appwrite";
 import { InputFile } from "node-appwrite/file";
-import { getCurrentUser } from "@/lib/actions/user.actions";
+import { getCurrentUser, type UserDocument } from "@/lib/actions/user.actions";
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
-
-export interface UserDocument extends Models.Document {
-  fullName: string;
-  email: string;
-  avatar: string;
-  accountId: string;
-}
 
 export interface FileDocument extends Models.Document {
   type: string;
