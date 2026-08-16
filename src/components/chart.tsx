@@ -16,7 +16,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const Chart = ({ used = 0 }: { used: number }) => {
-  const chartData = [{ storage: "used", 10: used, fill: "white" }];
+  const percentage = Math.min(100, Math.max(0, calculatePercentage(used)));
+  const chartData = [{ used: percentage, fill: "white" }];
 
   return (
     <Card className="chart">
@@ -25,7 +26,7 @@ export const Chart = ({ used = 0 }: { used: number }) => {
           <RadialBarChart
             data={chartData}
             startAngle={90}
-            endAngle={Number(calculatePercentage(used)) + 90}
+            endAngle={90 + percentage}
             innerRadius={80}
             outerRadius={110}
           >
@@ -36,7 +37,7 @@ export const Chart = ({ used = 0 }: { used: number }) => {
               className="polar-grid"
               polarRadius={[86, 74]}
             />
-            <RadialBar dataKey="storage" background cornerRadius={10} />
+            <RadialBar dataKey="used" background cornerRadius={10} />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
                 content={({ viewBox }) => {
@@ -44,10 +45,7 @@ export const Chart = ({ used = 0 }: { used: number }) => {
                     return (
                       <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
                         <tspan x={viewBox.cx} y={viewBox.cy} className="chart-total-percentage">
-                          {used && calculatePercentage(used)
-                            ? calculatePercentage(used).toString().replace(/^0+/, "")
-                            : "0"}
-                          %
+                          {used && percentage ? percentage.toString().replace(/^0+|0+$/g, "") : "0"}%
                         </tspan>
                         <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-white/70">
                           Space used
