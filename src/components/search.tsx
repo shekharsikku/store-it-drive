@@ -2,44 +2,66 @@
 
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useRef, useState } from "react";
 import { FormattedDateTime } from "@/components/formatted-datetime";
 import { Thumbnail } from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/use-debounce";
 import { type FileDocument, getFiles } from "@/lib/actions/file.actions";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("query") || "";
+  const pathname = usePathname();
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const searchIdRef = useRef(0);
+
   const [results, setResults] = useState<FileDocument[]>([]);
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const path = usePathname();
-  const [debouncedQuery] = useDebounce(query, 300);
+  const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      if (debouncedQuery.length === 0) {
-        setResults([]);
+  const searchFiles = useDebounce(async (searchText: string, searchId: number) => {
+    const files = await getFiles({ types: [], searchText });
+
+    if (searchId !== searchIdRef.current) return;
+
+    setResults(files.rows);
+    setQuery(searchText);
+    setOpen(true);
+
+    if (files.total === 0) {
+      closeTimeoutRef.current = setTimeout(() => {
+        if (searchId !== searchIdRef.current) return;
+
         setOpen(false);
-        return router.push(path.replace(searchParams.toString(), ""));
-      }
+        setQuery("");
+        setResults([]);
 
-      const files = await getFiles({ types: [], searchText: debouncedQuery });
-      setResults(files.documents);
-      setOpen(true);
-    };
-
-    fetchFiles();
-  }, [debouncedQuery]);
-
-  useEffect(() => {
-    if (!searchQuery) {
-      setQuery("");
+        router.push(pathname.replace(params.toString(), ""));
+        closeTimeoutRef.current = null;
+      }, 5000);
     }
-  }, [searchQuery]);
+  }, 1000);
+
+  const handleSearch = (searchText: string) => {
+    const searchId = ++searchIdRef.current;
+
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+
+    const trimmed = searchText.trim();
+
+    if (trimmed.length < 3) {
+      setOpen(false);
+      setResults([]);
+      return;
+    }
+
+    searchFiles(trimmed, searchId);
+  };
 
   const handleClickItem = (file: FileDocument) => {
     setOpen(false);
@@ -54,10 +76,9 @@ const Search = () => {
         <Image src="/assets/icons/search.svg" alt="Search" width={24} height={24} />
         <Input
           id="search"
-          value={query}
           placeholder="Search..."
           className="search-input"
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
         />
 
         {open && (
